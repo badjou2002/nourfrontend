@@ -53,7 +53,7 @@ export default function Dashboard() {
     { label: 'Produits', value: summary.totalProducts, icon: FiPackage, tone: 'bg-nour-lavender-pale text-nour-lavender-dark' },
   ];
 
-  const maxDailyRevenue = Math.max(1, ...dailySales.map((d) => d.revenue));
+  const maxDailyOrders = Math.max(1, ...dailySales.map((d) => d.orders));
   const statusTotal = Object.values(ordersByStatus).reduce((a, b) => a + b, 0);
   const maxCategoryRevenue = Math.max(1, ...categorySales.map((c) => c.revenue));
 
@@ -83,20 +83,21 @@ export default function Dashboard() {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <section className="card-nour p-6">
-          <h2 className="font-display text-lg font-semibold">Ventes des 14 derniers jours</h2>
+          <h2 className="font-display text-lg font-semibold">Commandes par jour — 14 derniers jours</h2>
           {dailySales.length === 0 ? (
             <p className="mt-4 text-sm text-nour-ink/50">Aucune vente sur cette période.</p>
           ) : (
             <div className="mt-5 flex h-48 items-end gap-1.5">
               {dailySales.map((day) => (
-                <div key={day._id} className="group relative flex flex-1 flex-col items-center justify-end gap-1">
-                  <span className="hidden text-[10px] font-semibold text-nour-lavender-dark group-hover:block">
-                    {formatTND(day.revenue)}
-                  </span>
-                  <div
-                    className="w-full rounded-t-soft bg-gradient-to-t from-nour-lavender to-nour-lavender-light transition-all hover:from-nour-teal hover:to-nour-teal-light"
-                    style={{ height: `${Math.max(4, (day.revenue / maxDailyRevenue) * 100)}%` }}
-                  />
+                <div key={day._id} className="group relative flex h-full flex-1 flex-col items-center gap-1">
+                  <div className="flex w-full flex-1 items-end">
+                    <div
+                      aria-label={`${day.orders} commande${day.orders > 1 ? 's' : ''} le ${new Date(`${day._id}T00:00:00`).toLocaleDateString('fr-FR')}`}
+                      title={`${day.orders} commande${day.orders > 1 ? 's' : ''} · ${formatTND(day.revenue)}`}
+                      className="w-full rounded-t-soft bg-gradient-to-t from-nour-lavender to-nour-lavender-light transition-colors hover:from-nour-teal hover:to-nour-teal-light"
+                      style={{ height: day.orders ? `${Math.max(4, (day.orders / maxDailyOrders) * 100)}%` : '2px' }}
+                    />
+                  </div>
                   <span className="text-[9px] text-nour-ink/40">
                     {new Date(`${day._id}T00:00:00`).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}
                   </span>
