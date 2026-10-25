@@ -7,15 +7,15 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/robots.txt': {
-        target: 'http://localhost:5000',
+        target: 'nourbackend.vercel.app',
         changeOrigin: true,
       },
       '/sitemap.xml': {
-        target: 'http://localhost:5000',
+        target: 'nourbackend.vercel.app',
         changeOrigin: true,
       },
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'nourbackend.vercel.app',
         changeOrigin: true,
       },
     },
