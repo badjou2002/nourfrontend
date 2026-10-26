@@ -6,7 +6,7 @@ import logo from '../../assets/logo.svg';
 export default function Footer() {
   return (
     <footer className="mt-20 bg-gradient-to-br from-nour-lavender-dark to-nour-lavender text-white">
-      <div className="container-nour grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="container-nour grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-3">
         <div>
           <Link to="/" className="inline-flex rounded-softer bg-white/95 px-3 py-2 shadow-soft">
             <img src={logo} alt="NOUR" className="h-10 w-auto" />
@@ -27,21 +27,11 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div>
-          <h4 className="font-display text-lg font-semibold">Aide</h4>
-          <ul className="mt-4 space-y-2 text-sm text-white/80">
-            <li><Link to="/aide/livraison" className="hover:text-white">Livraison en Tunisie</Link></li>
-            <li><Link to="/aide/retours" className="hover:text-white">Retours &amp; échanges</Link></li>
-            <li><Link to="/aide/paiement" className="hover:text-white">Moyens de paiement</Link></li>
-            <li><Link to="/contact" className="hover:text-white">Nous contacter</Link></li>
-          </ul>
-        </div>
-
       <div>
         <h4 className="font-display text-lg font-semibold">Suivez-nous</h4>
         <ul className="mt-4 space-y-3 text-sm text-white/80">
           <li className="flex items-center gap-2">
-            <FiMapPin /> Tunis, Tunisie
+            <FiMapPin /> Sfax, Tunisie
           </li>
           <li className="flex items-center gap-2">
             <FiPhone /> +216 44 496 777

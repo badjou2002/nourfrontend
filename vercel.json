@@ -9,6 +9,10 @@
             "destination": "/api/robots"
         },
         {
+            "source": "/robot.txt",
+            "destination": "/api/robots"
+        },
+        {
             "source": "/(.*)",
             "destination": "/index.html"
         }

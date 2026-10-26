@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
+import { FiFilter, FiX } from 'react-icons/fi';
 import FilterPanel from '../components/catalog/FilterPanel';
 import SearchBar from '../components/catalog/SearchBar';
 import SortSelect from '../components/catalog/SortSelect';
@@ -23,10 +24,27 @@ import Doodles from '../components/layout/Doodles';
 export default function CatalogPage() {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const filters = useSelector(selectFilters);
   const queryParams = useSelector(selectQueryParams);
   const { products, total, pages, loading, options, error } = useSelector((state) => state.catalog);
   const allFilters = useSelector(selectFilters);
+
+  useEffect(() => {
+    if (!filtersOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setFiltersOpen(false);
+    };
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [filtersOpen]);
 
   useEffect(() => {
     dispatch(fetchFilterOptionsThunk());
@@ -43,6 +61,7 @@ export default function CatalogPage() {
         colors: params.colors ? params.colors.split(',').filter(Boolean) : [],
         availability: params.availability || '',
         promo: params.promo === 'true' ? 'true' : '',
+        sort: params.sort || 'newest',
       })
     );
   }, [searchParams, dispatch]);
@@ -132,15 +151,17 @@ export default function CatalogPage() {
         </div>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
-          <FilterPanel
-            options={options}
-            filters={filters}
-            onToggle={handleToggleSync}
-            onPriceChange={(range) => dispatch(setPriceRange(range))}
-            onAvailability={handleAvailability}
-            onReset={handleReset}
-            activeCount={activeCount}
-          />
+          <div className="hidden lg:block">
+            <FilterPanel
+              options={options}
+              filters={filters}
+              onToggle={handleToggleSync}
+              onPriceChange={(range) => dispatch(setPriceRange(range))}
+              onAvailability={handleAvailability}
+              onReset={handleReset}
+              activeCount={activeCount}
+            />
+          </div>
 
           <div>
             {loading ? (
@@ -211,6 +232,59 @@ export default function CatalogPage() {
           </div>
         </div>
       </div>
+
+      <button
+        type="button"
+        onClick={() => setFiltersOpen(true)}
+        aria-label={`Ouvrir les filtres${activeCount ? `, ${activeCount} actif(s)` : ''}`}
+        className="fixed left-0 top-1/2 z-30 flex -translate-y-1/2 items-center gap-2 rounded-r-full bg-nour-lavender px-3 py-3 text-sm font-semibold text-white shadow-doodle transition-transform hover:translate-x-1 lg:hidden"
+      >
+        <FiFilter size={20} />
+        <span className="sr-only">Filtres</span>
+        {activeCount > 0 && (
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-xs text-nour-lavender-dark">
+            {activeCount}
+          </span>
+        )}
+      </button>
+
+      {filtersOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <button
+            type="button"
+            onClick={() => setFiltersOpen(false)}
+            aria-label="Fermer les filtres"
+            className="absolute inset-0 h-full w-full bg-nour-ink/40"
+          />
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-label="Filtres du catalogue"
+            className="absolute inset-y-0 left-0 flex w-[min(88vw,360px)] flex-col overflow-y-auto bg-white p-5 shadow-2xl"
+          >
+            <div className="mb-2 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(false)}
+                aria-label="Fermer les filtres"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-nour-lavender-pale text-nour-lavender-dark"
+              >
+                <FiX size={20} />
+              </button>
+            </div>
+            <FilterPanel
+              options={options}
+              filters={filters}
+              onToggle={handleToggleSync}
+              onPriceChange={(range) => dispatch(setPriceRange(range))}
+              onAvailability={handleAvailability}
+              onReset={handleReset}
+              activeCount={activeCount}
+              className="flex flex-col gap-4"
+            />
+          </section>
+        </div>
+      )}
     </div>
   );
 }

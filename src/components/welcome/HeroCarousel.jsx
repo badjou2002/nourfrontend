@@ -44,18 +44,20 @@ export default function HeroCarousel({ banners = [] }) {
         ]}
       />
 
-      <div className="container-nour relative flex h-[560px] items-center overflow-hidden sm:h-[540px] lg:h-[560px]">
+      <div className="container-nour relative flex h-[620px] items-center overflow-hidden py-8 sm:h-[540px] sm:py-0 lg:h-[560px]">
         <div className="relative h-full w-full">
           {activeBanners.map((banner, index) => (
             <div
               key={banner._id || index}
               className={`absolute inset-0 flex items-center transition-all duration-700 ease-out ${
-                index === current ? 'translate-x-0 opacity-100' : 'pointer-events-none opacity-0'
-              } ${direction === 'prev' ? '-translate-x-8' : 'translate-x-8'}`}
+                index === current
+                  ? 'translate-x-0 opacity-100'
+                  : `pointer-events-none opacity-0 ${direction === 'prev' ? '-translate-x-8' : 'translate-x-8'}`
+              }`}
               aria-hidden={index !== current}
             >
-              <div className="grid w-full items-center gap-6 sm:gap-8 lg:grid-cols-2">
-                <div className={`order-2 text-center lg:order-1 lg:text-left ${index === current ? 'animate-fade-up' : ''}`}>
+              <div className="grid w-full grid-cols-1 justify-items-center items-center gap-6 sm:gap-8 lg:grid-cols-2">
+                <div className={`w-full max-w-xl order-2 text-center lg:order-1 lg:max-w-none lg:text-left ${index === current ? 'animate-fade-up' : ''}`}>
                   <p className="section-label mb-3 text-nour-teal">Papeterie créative</p>
                   <h1 className="font-display text-3xl font-bold leading-tight text-nour-ink sm:text-5xl lg:text-6xl">
                     {banner.title || 'Créez, organisez, rêvez.'}
@@ -78,7 +80,7 @@ export default function HeroCarousel({ banners = [] }) {
                   </div>
                 </div>
 
-                <div className="relative order-1 flex justify-center lg:order-2">
+                <div className="relative order-1 flex w-full justify-center lg:order-2">
                   <img
                     src={banner.imageUrl}
                     alt={banner.title || 'Bannière NOUR'}

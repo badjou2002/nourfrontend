@@ -30,14 +30,23 @@ function CheckboxGroup({ title, options, selected, onToggle }) {
   );
 }
 
-export default function FilterPanel({ options, filters, onToggle, onPriceChange, onAvailability, onReset, activeCount }) {
+export default function FilterPanel({
+  options,
+  filters,
+  onToggle,
+  onPriceChange,
+  onAvailability,
+  onReset,
+  activeCount,
+  className = 'card-nour sticky top-24 flex flex-col gap-4 p-5',
+}) {
   const availabilityOptions = [
     { value: 'in_stock', label: 'En stock' },
     { value: 'preorder', label: 'Précommande' },
   ];
 
   return (
-    <aside className="card-nour sticky top-24 flex flex-col gap-4 p-5">
+    <aside className={className}>
       <div className="flex items-center justify-between">
         <h3 className="font-display text-lg font-semibold">Filtres</h3>
         {activeCount > 0 && (
